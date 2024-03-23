@@ -31,26 +31,36 @@ class Person :
 
 class Menu :
     
-    def choix (self, choice = input ("choisissez une option :")) :
+    @staticmethod
+    def choix (choice) :
         try :
             assert choice in ["1", "2"]
         except AssertionError : 
             print ("choisissez entre la première et la deuxième option !")
-            return self.choix()
+            return Menu.choix(choice = input ("choisissez une option :"))
         else : 
             return choice
      
     def display_main_menu (self) :
         menu = """
-            Bienvenue à X - O game
-                1. Start the game 
-                2. Quit the game 
-            Choose one option :"""
+Bienvenue à X - O game
+1. Start the game 
+2. Quit the game 
+Choose one option : """
         choice = input (menu)
-        return self.choix (choice)
+        return Menu.choix (choice)
         
+    def display_end_menu (self) : 
+        menu = """
+Game Over !
+1. Restart Game
+2. Quit Game
+Choose one option : """
+        choice = input (menu)
+        return Menu.choix (choice)
         
 
 if "__main__" == __name__ : 
     menuu = Menu ()
     menuu.display_main_menu ()
+    menuu.display_end_menu ()
