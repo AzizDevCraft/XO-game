@@ -58,9 +58,52 @@ Game Over !
 Choose one option : """
         choice = input (menu)
         return Menu.choix (choice)
+
+
+class Board : 
+    
+    count = 0 # nombre de retour à la ligne
+    def __init__ (self) : 
+        self.board = [str(x) for x in range (1,10)]
         
+    def display_board (self) : 
+        grille = self.board
+        if self.count == 0 : 
+            for i in range (3,10,3) : 
+                grille.insert (i + self.count, "\n")
+                self.count += 1
+        grille = " | ".join(grille)
+        grille = " | " + grille
+        grille = grille.split("\n")
+        for i in range (3) : 
+            grille [i] = grille [i][2:-2]
+        grille = "\n___|___|___\n".join (grille[:-1])
+        grille +="\n   |   |"
+        return print (grille)
+    
+    def update_board (self, position, _symbole) : 
+        
+        try :
+            indice = self.board.index (str(position))
+        except ValueError :
+            print ("tu ne peux pas jouez dans cette case !")
+            return False 
+        else :  
+            self.board [indice] = _symbole
+            return self.display_board ()
+    
+    def reset_board (self) : 
+        self.board = [str(x) for x in range (1,10)]
+        self.count = 0
+        return self.display_board ()
+                
+
 
 if "__main__" == __name__ : 
-    menuu = Menu ()
-    menuu.display_main_menu ()
-    menuu.display_end_menu ()
+    planche = Board ()
+    planche.display_board()
+    planche.update_board (7, "X")
+    planche.update_board (7, "O")
+    planche.update_board (3, "O")
+    planche.reset_board ()
+    
