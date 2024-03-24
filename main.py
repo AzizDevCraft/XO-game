@@ -98,6 +98,14 @@ class Board :
         return self.display_board ()
                 
 
+class Game : 
+    
+    def __init__ (self) :
+        self.board = Board ()
+        self.player1 = Person ()
+        self.player2 = Person ()
+        
+        
 
 if "__main__" == __name__ : 
     planche = Board ()
