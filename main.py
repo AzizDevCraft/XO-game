@@ -60,9 +60,6 @@ Game Over !
 Choose one option : """
         choice = input (menu)
         return Menu.choix (choice)
-    
-    def diplay_rules (self) :
-        pass
 
 
 class Board : 
@@ -109,7 +106,7 @@ class Game :
         self.board = Board ()
         self.players = [Person (), Person ()]
         self.menu = Menu ()
-        self.current_player_index = int ()
+        self.current_player_index = 1
         
     def start_game (self) : 
         option = self.menu.display_main_menu () 
@@ -118,13 +115,23 @@ class Game :
             symbol_player1 = self.players [0].choose_symbole ()
             name_player2 = self.players [1].choose_name ()
             symbol_player2 = self.players [1].choose_symbole(symbol_player1)
-            
+            self.board.display_board ()
+            rules = "Choisir la position où vous voulez positionné votre symbole "
+            print (rules)
+            return {name_player1 : symbol_player1, name_player2: symbol_player2}
+              
         print ("End Game!")
         os.system("pause")
     
     def play_turn (self) : 
-        pass
-    
+        self.current_player_index = abs (self.current_player_index - 1)
+        if self.current_player_index == 0 : 
+            position = input (f"c'est le tour de {self.players[0].name}, choisit une position :")
+            self.board.update_board (position, self.players[0].symbol)
+        else : 
+            position = input (f"c'est le tour de {self.players[1].name}, choisit une position :")
+            self.board.update_board (position, self.players[1].symbol)       
+            
     def check_win (self) : 
         pass
         
@@ -141,8 +148,6 @@ class Game :
 
 
 if "__main__" == __name__ : 
-    joueur = Person ()
-    joueur1 = Person ()
-    joueur1.choose_symbole()
-    joueur.choose_symbole ("X")
-    
+    xo = Game ()
+    xo.start_game () 
+    xo.play_turn ()
