@@ -1,5 +1,8 @@
 import os 
 
+def clear_screen () : 
+    os.system("cls" if os.name == "nt" else "clear")
+    
 class Person : 
     
     def  __init__ (self) : 
@@ -111,17 +114,18 @@ class Game :
     def start_game (self) : 
         option = self.menu.display_main_menu () 
         if option == "1" : 
-            name_player1 = self.players [0].choose_name ()
+            print ("player 1 identifiez-vous :")
+            self.players [0].choose_name ()
             symbol_player1 = self.players [0].choose_symbole ()
-            name_player2 = self.players [1].choose_name ()
-            symbol_player2 = self.players [1].choose_symbole(symbol_player1)
+            clear_screen()
+            print ("player 2 identifiez-vous :")
+            self.players [1].choose_name ()
+            self.players [1].choose_symbole(symbol_player1)
             self.board.display_board ()
             rules = "Choisir la position où vous voulez positionné votre symbole "
             print (rules)
-            return {name_player1 : symbol_player1, name_player2: symbol_player2}
-              
-        print ("End Game!")
-        os.system("pause")
+        else :
+            self.quit_game ()
     
     def play_turn (self) : 
         self.current_player_index = abs (self.current_player_index - 1)
@@ -142,7 +146,8 @@ class Game :
         pass 
     
     def quit_game (self) :
-        pass 
+        print ("End Game!")
+        os.system("pause")
         
 
 
