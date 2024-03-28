@@ -90,8 +90,12 @@ class Board :
         
         try :
             indice = self.board.index (str(position))
+            assert position.isdigit ()
         except ValueError :
             print ("tu ne peux pas jouez dans cette case !")
+            return False 
+        except AssertionError : 
+            print ("il faut choisir seulement des chiffres")
             return False 
         else :  
             self.board [indice] = _symbole
@@ -137,11 +141,36 @@ class Game :
             self.board.update_board (position, self.players[1].symbol)       
             
     def check_win (self) : 
-        pass
+        for i in range (3) :
+            if self.board.board[i] == self.board.board[i+4] == self.board.board[i+8] : 
+                return True 
+        for i in range (0,10,4): 
+            if self.board.board [i] == self.board.board [i+1] == self.board.board [i+2] :
+                return True
+        for i in range (0,3,2) : 
+            pas = 5-i
+            if self.board.board [i] == self.board.board [i+pas] == self.board.board [i+2*pas] :
+                return True
+        return False
         
     def check_draw (self) : 
-        pass
+        test = True
+        for cell in self.board.board : 
+            if cell.isdigit () :
+                test = False 
+        return test
     
+    def play_game (self) :
+        
+        while not(self.check_win()) and not(self.check_draw ()):
+            clear_screen ()
+            self.play_turn ()
+        self.menu.display_end_menu ()
+        if self.menu.display_end_menu () == 1 :
+            self.restart_game ()
+        else : 
+            self.quit_game ()
+            
     def restart_game (self) : 
         pass 
     
@@ -156,3 +185,4 @@ if "__main__" == __name__ :
     xo = Game ()
     xo.start_game () 
     xo.play_turn ()
+    print (xo.check_draw(), xo.check_win ())
