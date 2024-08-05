@@ -1,3 +1,9 @@
+import os 
+import pickle 
+
+def clear_screen () : 
+    os.system("cls" if os.name == "nt" else "clear")
+    
 class Person : 
     
     def  __init__ (self) : 
@@ -16,16 +22,16 @@ class Person :
                 self.name = name
                 return self.name
             
-    def choose_symbole (self) : 
+    def choose_symbole (self, reference = "") : 
         while True : 
-            symbol = input ("Donnez un symbole :")
+            symbol = input ("Donnez un symbole :").upper()
             try :
-                assert symbol.isalpha () and len(symbol) == 1 
+                assert symbol.isalpha () and len(symbol) == 1 and symbol != reference
             except AssertionError : 
-                print ("le symbole doit contenir une seule lettre !")
+                print ("le symbole doit contenir une seule lettre ! (n'est pas choisi avant)")
                 continue
             else : 
-                self.symbol = symbol.upper()
+                self.symbol = symbol
                 return self.symbol 
             
 
@@ -85,8 +91,12 @@ class Board :
         
         try :
             indice = self.board.index (str(position))
+            assert position.isdigit ()
         except ValueError :
             print ("tu ne peux pas jouez dans cette case !")
+            return False 
+        except AssertionError : 
+            print ("il faut choisir seulement des chiffres")
             return False 
         else :  
             self.board [indice] = _symbole
@@ -102,16 +112,87 @@ class Game :
     
     def __init__ (self) :
         self.board = Board ()
-        self.player1 = Person ()
-        self.player2 = Person ()
+        self.players = [Person (), Person ()]
+        self.menu = Menu ()
+        self.current_player_index = 1
         
+    def start_game (self) : 
+        option = self.menu.display_main_menu () 
+        if option == "1" : 
+            print ("player 1 identifiez-vous :")
+            self.players [0].choose_name ()
+            symbol_player1 = self.players [0].choose_symbole ()
+            clear_screen()
+            print ("player 2 identifiez-vous :")
+            self.players [1].choose_name ()
+            self.players [1].choose_symbole(symbol_player1)
+            self.board.display_board ()
+            rules = "Choisir la position où vous voulez positionné votre symbole "
+            print (rules)
+        else :
+            self.quit_game ()
+    
+    def play_turn (self) : 
+        self.current_player_index = abs (self.current_player_index - 1)
+        if self.current_player_index == 0 : 
+            self.board.display_board()
+            position = input (f"c'est le tour de {self.players[0].name}, choisit une position :")
+            self.board.update_board (position, self.players[0].symbol)
+        else : 
+            self.board.display_board()
+            position = input (f"c'est le tour de {self.players[1].name}, choisit une position :")
+            self.board.update_board (position, self.players[1].symbol)       
+    
+    def _who_win (self, symbole) :
+        if self.board.board [symbole] == self.players[0].symbol : 
+            print (f"{self.players[0].name} a gagné cette partie !")
+        else : 
+            print (f"{self.players[1].name} a gagné cette partie !")
+    
+    def check_win (self) : 
+        for i in range (3) :
+            if self.board.board[i] == self.board.board[i+4] == self.board.board[i+8] : 
+                self._who_win (i)
+                return True 
+        for i in range (0,10,4): 
+            if self.board.board [i] == self.board.board [i+1] == self.board.board [i+2] :
+                self._who_win (i)
+                return True
+        for i in range (0,3,2) : 
+            pas = 5-i
+            if self.board.board [i] == self.board.board [i+pas] == self.board.board [i+2*pas] :
+                self._who_win (i)
+                return True
+        return False
+        
+    def check_draw (self) : 
+        test = True
+        for cell in self.board.board : 
+            if cell.isdigit () :
+                test = False 
+        return test
+    
+    def play_game (self) :
+        while not(self.check_win()) and not(self.check_draw ()):
+            clear_screen ()
+            self.play_turn ()
+        self.menu.display_end_menu ()
+        if self.menu.display_end_menu () == 1 :
+            self.restart_game ()
+        else : 
+            self.quit_game ()
+            
+    def restart_game (self) : 
+        pass 
+    
+    def quit_game (self) :
+        print ("End Game!")
+        os.system("pause")
         
 
+
+
 if "__main__" == __name__ : 
-    planche = Board ()
-    planche.display_board()
-    planche.update_board (7, "X")
-    planche.update_board (7, "O")
-    planche.update_board (3, "O")
-    planche.reset_board ()
-    
+    xo = Game ()
+    xo.start_game () 
+    xo.play_game ()
