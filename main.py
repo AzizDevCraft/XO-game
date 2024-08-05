@@ -185,6 +185,7 @@ class Game :
             
     def restart_game (self) : 
         self.board.reset_board()
+        self.current_player_index = 1
         self.play_game ()
     
     def quit_game (self) :
