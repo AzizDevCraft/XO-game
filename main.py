@@ -134,10 +134,15 @@ class Game :
     
     def play_turn (self) : 
         self.current_player_index = abs (self.current_player_index - 1)
-        if self.current_player_index == 0 : 
-            self.board.display_board()
-            position = input (f"c'est le tour de {self.players[0].name}, choisit une position :")
-            self.board.update_board (position, self.players[0].symbol)
+        if self.current_player_index == 0 :
+            while True :  
+                self.board.display_board()
+                position = input (f"c'est le tour de {self.players[0].name}, choisit une position :")
+                try : 
+                    assert self.board.update_board (position, self.players[0].symbol) != False
+                except AssertionError : 
+                    continue 
+                else :  break 
         else : 
             self.board.display_board()
             position = input (f"c'est le tour de {self.players[1].name}, choisit une position :")
