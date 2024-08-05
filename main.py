@@ -171,11 +171,7 @@ class Game :
         return False
         
     def check_draw (self) : 
-        test = True
-        for cell in self.board.board : 
-            if cell.isdigit () :
-                test = False 
-        return test
+        return all (not cell.isdigit() for cell in self.board.board)
     
     def play_game (self) :
         while not(self.check_win()) and not(self.check_draw ()):
