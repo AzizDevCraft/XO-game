@@ -176,14 +176,15 @@ class Game :
         while not(self.check_win()) and not(self.check_draw ()):
             clear_screen ()
             self.play_turn ()
-        self.menu.display_end_menu ()
-        if self.menu.display_end_menu () == 1 :
+        choix = self.menu.display_end_menu ()
+        if choix == "1" :
             self.restart_game ()
         else : 
             self.quit_game ()
             
     def restart_game (self) : 
-        pass 
+        self.board.reset_board()
+        self.play_game ()
     
     def quit_game (self) :
         print ("End Game!")
