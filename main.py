@@ -1,4 +1,5 @@
 import os 
+import pickle 
 
 def clear_screen () : 
     os.system("cls" if os.name == "nt" else "clear")
@@ -134,22 +135,33 @@ class Game :
     def play_turn (self) : 
         self.current_player_index = abs (self.current_player_index - 1)
         if self.current_player_index == 0 : 
+            self.board.display_board()
             position = input (f"c'est le tour de {self.players[0].name}, choisit une position :")
             self.board.update_board (position, self.players[0].symbol)
         else : 
+            self.board.display_board()
             position = input (f"c'est le tour de {self.players[1].name}, choisit une position :")
             self.board.update_board (position, self.players[1].symbol)       
-            
+    
+    def _who_win (self, symbole) :
+        if self.board.board [symbole] == self.players[0].symbol : 
+            print (f"{self.players[0].name} a gagné cette partie !")
+        else : 
+            print (f"{self.players[1].name} a gagné cette partie !")
+    
     def check_win (self) : 
         for i in range (3) :
             if self.board.board[i] == self.board.board[i+4] == self.board.board[i+8] : 
+                self._who_win (i)
                 return True 
         for i in range (0,10,4): 
             if self.board.board [i] == self.board.board [i+1] == self.board.board [i+2] :
+                self._who_win (i)
                 return True
         for i in range (0,3,2) : 
             pas = 5-i
             if self.board.board [i] == self.board.board [i+pas] == self.board.board [i+2*pas] :
+                self._who_win (i)
                 return True
         return False
         
@@ -161,7 +173,6 @@ class Game :
         return test
     
     def play_game (self) :
-        
         while not(self.check_win()) and not(self.check_draw ()):
             clear_screen ()
             self.play_turn ()
@@ -184,5 +195,4 @@ class Game :
 if "__main__" == __name__ : 
     xo = Game ()
     xo.start_game () 
-    xo.play_turn ()
-    print (xo.check_draw(), xo.check_win ())
+    xo.play_game ()
