@@ -9,6 +9,7 @@ class Person :
     def  __init__ (self) : 
         self.name = str ()
         self.symbol = str ()
+        self.nombre_partie_gagner = 0
         
     def choose_name (self) :
         while True : 
@@ -115,20 +116,51 @@ class Game :
         self.players = [Person (), Person ()]
         self.menu = Menu ()
         self.current_player_index = 1
-        
+    
+    def exist (self, fichier) : 
+        localisation = os.getcwd ()
+        path_fichier = os.path.join (localisation,fichier)
+        return os.path.exists (path_fichier)
+     
+    def save_data (self, player) : 
+        with open (f"{player.name}.pkl", "wb") as data : 
+            pickle.dump (player, data)
+            
+    def crash_data (self, player) : 
+        with open (f"{player.name}.pkl", "rb") as data : 
+            player = pickle.load (data)
+        return player
+    
     def start_game (self) : 
         option = self.menu.display_main_menu () 
         if option == "1" : 
             print ("player 1 identifiez-vous :")
             self.players [0].choose_name ()
-            symbol_player1 = self.players [0].choose_symbole ()
-            clear_screen()
+            if not (self.exist (f"{self.players[0].name}.pkl")) : 
+                symbol_player1 = self.players [0].choose_symbole ()
+                self.save_data (self.players [0])
+            else : 
+                self.players [0] = self.crash_data (self.players [0])
+                symbol_player1 = self.players [0].symbol
+                clear_screen()
+                print (f"Re bonjour {self.players[0].name} ({self.players[0].symbol}), parties gagnés : {self.players[0].nombre_partie_gagner}")
+            
             print ("player 2 identifiez-vous :")
             self.players [1].choose_name ()
-            self.players [1].choose_symbole(symbol_player1)
+            if not (self.exist (f"{self.players[1].name}.pkl")) : 
+                self.players [1].choose_symbole(symbol_player1)
+                self.save_data (self.players[1])
+            else : 
+                self.players [1] = self.crash_data (self.players [1])
+                print (f"Re bonjour {self.players[1].name} ({self.players[1].symbol}), parties gagnés : {self.players[1].nombre_partie_gagner}")
+                if self.players[0].symbol == self.players[1].symbol : 
+                    print ("vous avez le meme symbol !")
+                    self.players [1].choose_symbole(self.players[0].symbol)
+                    
             self.board.display_board ()
             rules = "Choisir la position où vous voulez positionné votre symbole "
             print (rules)
+            
         else :
             self.quit_game ()
     
@@ -150,8 +182,12 @@ class Game :
     
     def _who_win (self, symbole) :
         if self.board.board [symbole] == self.players[0].symbol : 
+            self.players[0].nombre_partie_gagner += 1
+            self.save_data (self.players[0])
             print (f"{self.players[0].name} a gagné cette partie !")
-        else : 
+        else :
+            self.players[1].nombre_partie_gagner += 1 
+            self.save_data (self.players[1])
             print (f"{self.players[1].name} a gagné cette partie !")
     
     def check_win (self) : 
