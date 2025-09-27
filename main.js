@@ -1,4 +1,7 @@
 const prompt = require ("prompt-sync") ();
+const readline = require("readline");
+const fs = require ("fs");
+
 
 class Person {
     #name;
@@ -41,7 +44,7 @@ class Person {
      */
     #validSymbol (symbol, existingSymbol) {
         if (symbol.trim ().toLowerCase () === existingSymbol.trim ().toLowerCase ()) {
-            return {valid : false, errorMessage : "Symbol existe deja !"}            
+            return {valid : false, errorMessage : "symbol existe deja !"}            
         }
         else if (!isNaN(Number (symbol))) {
             return {valid : false, errorMessage : "Syntaxe invalid (pas de chiffre) !"}            
@@ -71,8 +74,16 @@ class Person {
         return this.#name
     }
 
-    get symbol () {
+    get _symbol () {
         return this.#symbole
+    }
+
+    set _symbol (newSymbol) {
+        this.#symbole = newSymbol
+    }
+
+    set _name (newName) {
+        this.#name = newName
     }
 }
 
@@ -167,6 +178,48 @@ class Game {
         this.players = []
         this.currentPlayIndex = 0
         this.board = new Board ()
+        this.db = fs.existsSync("history.json") ? 
+            JSON.parse(fs.readFileSync ("history.json", "utf-8")) : 
+                fs.writeFileSync ("history.json", JSON.stringify({}), "utf-8")
+    }
+
+    /**
+     * @private
+     * @param {Person} player 
+     */
+    #saveData (players) {
+        for (let player of players) {
+            this.db[player.name] = [player._symbol, player._score]
+        }
+        console.log (this.db)
+        fs.writeFileSync("history.json", JSON.stringify (this.db, null, 2), "utf-8")
+    }
+
+    /**
+     * @private
+     * @param {Person} player 
+     */
+    #oldPlayer (player) {
+        if (Object.keys(this.db)?.includes (player.name)) {
+            console.log (`welcom back ${player.name}, your score for last parties is ${this.db[player.name][1]}`)
+            if (player._symbol !== this.db[player.name][0]) {
+                console.log (`Dans tes parties précedentes vous jouer avec ${this.db[player.name][0]}`)
+                while (true) {
+                    var response = prompt ("Si vous vouler changer tape (yes) or (no) : ").toLowerCase().trim()
+                    if (response === "yes" || response === "no") break
+                }
+                if (response === "yes") {
+                    console.log (`symbol changed to (${player._symbol})`)
+                    this.db[player.name] = [player._symbol, this.db[player.name][1]]
+                }else {
+                    console.log (`Ok ! you conserve your last symbol (${this.db[player.name][0]})`)
+                    player._symbol (this.db[player.name][0])
+                }
+            }
+            player._score = this.db[player.name][1] 
+            return player
+        }
+        return player
     }
 
     startGame () {
@@ -175,9 +228,11 @@ class Game {
         if (choice === 2) this.#quitGame ()
         else {
             console.log ("player 1 identifiez-vous :")
-            this.players.push (new Person ())
+            const playerA = new Person ()
+            this.players.push (this.#oldPlayer (playerA))
             console.log ("player 2 identifiez-vous :")
-            this.players.push (new Person (this.players[0].name, this.players[0].symbol))
+            const playerB = new Person (this.players[0].name, this.players[0]._symbol)
+            this.players.push (this.#oldPlayer (playerB))
             return this.#playGame ()
         }
     }
@@ -189,12 +244,13 @@ class Game {
     #playTurn (index) {
         this.board.displayBoard ()
         const pos = prompt (`c'est le tour de ${this.players[index].name}, choisit une position : `)
-        this.board.updateBoard (pos, this.players[index].symbol)
+        this.board.updateBoard (pos, this.players[index]._symbol)
         this.currentPlayIndex = Math.abs (index - 1)
     }
 
     #whoWins (combinaison) {
-        const who = this.players.find (item => item.symbol === this.board.board[combinaison[0]])
+        const who = this.players.find (item => item._symbol === this.board.board[combinaison[0]])
+        who._score += 1
         console.log (`${who.name} a gagné cette partie !`)
         this.board.displayBoard ()
     }
@@ -228,6 +284,7 @@ class Game {
             this.#playTurn (this.currentPlayIndex)
         }
         this.#whoWins (this.#checkWin (this.board.board).combination)
+        this.#saveData (this.players)
         this.#restartGame ()
     }
 
