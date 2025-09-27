@@ -1,10 +1,9 @@
 const prompt = require ("prompt-sync") ();
-const readline = require("readline");
 const fs = require ("fs");
 
 
 class Person {
-    #name;
+    #_name;
     #symbole;
 
     /**
@@ -12,25 +11,26 @@ class Person {
      * @param {string} [existingSymbol = ""]
      */
     constructor (existingName="", existingSymbol ="") {
-        this.#name = this.askUntilValid ("Donner votre nom : ", this.#validName, existingName)
-        this.#symbole = this.askUntilValid ("choisissez votre symbol : ", this.#validSymbol, existingSymbol)
+        this.#_name = this.askUntilValid ("Donner votre nom : ", this.#validName, existingName)
+        this.#symbole = this.askUntilValid ("choisissez votre symbol : ", this.#validSymbol, existingSymbol).toUpperCase ()
         this._score = 0
+        this._game = 0
     }
 
     /**
      * @private
-     * @param {string} name 
+     * @param {string} _name 
      * @param {string} existingName 
      * @returns {{valid:boolean, errorMessage?:string}}
      */
-    #validName (name, existingName) {
-        if (name.trim ().toLowerCase () === existingName.trim ().toLowerCase ()) { 
+    #validName (_name, existingName) {
+        if (_name.trim ().toLowerCase () === existingName.trim ().toLowerCase ()) { 
             return {valid : false, errorMessage : "nom existe deja !"} 
         } 
-        else if (!isNaN(Number.parseInt(name))) {
+        else if (!isNaN(Number.parseInt(_name))) {
             return {valid : false, errorMessage : "nom invalide ! on peut pas mettre que des chiffres ou commencer avec !"}
         } 
-        else if (name.length < 4){
+        else if (_name.length < 4){
             return {valid : false, errorMessage : "nom invalide (une longueur minimum de 4 lettre) !"}
         }
         else return {valid : true}
@@ -70,8 +70,9 @@ class Person {
         return input.trim ()
     }
 
-    get name () {
-        return this.#name
+    get _name () {
+        this.#_name = this.#_name[0].toUpperCase () + this.#_name.slice (1).toLowerCase ()
+        return this.#_name
     }
 
     get _symbol () {
@@ -80,10 +81,6 @@ class Person {
 
     set _symbol (newSymbol) {
         this.#symbole = newSymbol
-    }
-
-    set _name (newName) {
-        this.#name = newName
     }
 }
 
@@ -178,9 +175,7 @@ class Game {
         this.players = []
         this.currentPlayIndex = 0
         this.board = new Board ()
-        this.db = fs.existsSync("history.json") ? 
-            JSON.parse(fs.readFileSync ("history.json", "utf-8")) : 
-                fs.writeFileSync ("history.json", JSON.stringify({}), "utf-8")
+        this.history = fs.existsSync("history.json") ? JSON.parse(fs.readFileSync ("history.json", "utf-8")) : {}
     }
 
     /**
@@ -189,10 +184,27 @@ class Game {
      */
     #saveData (players) {
         for (let player of players) {
-            this.db[player.name] = [player._symbol, player._score]
+            this.history[player._name] = {"symbol" : player._symbol, "score" : player._score, "game" : player._game}
         }
-        console.log (this.db)
-        fs.writeFileSync("history.json", JSON.stringify (this.db, null, 2), "utf-8")
+        fs.writeFileSync("history.json", JSON.stringify (this.history, null, 2), "utf-8")
+    }
+
+    #changeSymbol (player) {
+        let response = prompt ("Si vous vouler changer tape (yes) or (no) : ").toLowerCase().trim()
+        while (response !== "yes" && response !== "no") {
+            response = prompt ("Only (yes) or (no) : ").toLowerCase().trim()
+        }
+        if (response === "yes") {
+            console.log (`symbol changed to (${player._symbol})`)
+            this.history[player._name].symbol = player._symbol
+        }else {
+            if (this.players[0]._symbol === this.history[player._name].symbol) {
+                console.log ("Malheureusement ce symbole est déjà utilisé :(")
+            }else {
+                console.log (`Ok ! you conserve your last symbol (${this.history[player._name].symbol})`)
+                player._symbol = this.history[player._name].symbol
+            }    
+        }
     }
 
     /**
@@ -200,23 +212,13 @@ class Game {
      * @param {Person} player 
      */
     #oldPlayer (player) {
-        if (Object.keys(this.db)?.includes (player.name)) {
-            console.log (`welcom back ${player.name}, your score for last parties is ${this.db[player.name][1]}`)
-            if (player._symbol !== this.db[player.name][0]) {
-                console.log (`Dans tes parties précedentes vous jouer avec ${this.db[player.name][0]}`)
-                while (true) {
-                    var response = prompt ("Si vous vouler changer tape (yes) or (no) : ").toLowerCase().trim()
-                    if (response === "yes" || response === "no") break
-                }
-                if (response === "yes") {
-                    console.log (`symbol changed to (${player._symbol})`)
-                    this.db[player.name] = [player._symbol, this.db[player.name][1]]
-                }else {
-                    console.log (`Ok ! you conserve your last symbol (${this.db[player.name][0]})`)
-                    player._symbol (this.db[player.name][0])
-                }
+        if (Object.keys(this.history)?.includes (player._name)) {
+            console.log (`welcome back ${player._name}, your score for last parties is ${this.history[player._name].score}`)
+            if (player._symbol !== this.history[player._name].symbol) {
+                console.log (`Dans tes parties précedentes vous jouer avec ${this.history[player._name].symbol}`)
+                this.#changeSymbol (player)
             }
-            player._score = this.db[player.name][1] 
+            player._score = this.history[player._name].score 
             return player
         }
         return player
@@ -231,7 +233,7 @@ class Game {
             const playerA = new Person ()
             this.players.push (this.#oldPlayer (playerA))
             console.log ("player 2 identifiez-vous :")
-            const playerB = new Person (this.players[0].name, this.players[0]._symbol)
+            const playerB = new Person (this.players[0]._name, this.players[0]._symbol)
             this.players.push (this.#oldPlayer (playerB))
             return this.#playGame ()
         }
@@ -243,7 +245,7 @@ class Game {
      */
     #playTurn (index) {
         this.board.displayBoard ()
-        const pos = prompt (`c'est le tour de ${this.players[index].name}, choisit une position : `)
+        const pos = prompt (`c'est le tour de ${this.players[index]._name}, choisit une position : `)
         this.board.updateBoard (pos, this.players[index]._symbol)
         this.currentPlayIndex = Math.abs (index - 1)
     }
@@ -251,7 +253,7 @@ class Game {
     #whoWins (combinaison) {
         const who = this.players.find (item => item._symbol === this.board.board[combinaison[0]])
         who._score += 1
-        console.log (`${who.name} a gagné cette partie !`)
+        console.log (`${who._name} a gagné cette partie !`)
         this.board.displayBoard ()
     }
 
@@ -261,13 +263,8 @@ class Game {
      */
     #checkWin (board) {
         const winsPossibilities = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
-        for (let win of winsPossibilities) {
-            const ref = board [win [0]]
-            let test = true
-            for (let _ of win) {
-                if (board [_] !== ref)  test = false 
-            }
-            if (test) return {combination : win, result : true}
+        for (let combo of winsPossibilities) {
+            if (board [combo [0]] === board [combo [1]] && board [combo [1]] === board [combo [2]]) return { combination: combo, result: true }
         }
         return {result : false}
     }   
@@ -283,8 +280,19 @@ class Game {
         while (!this.#checkWin (this.board.board).result && !this.#checkDraw(this.board.board)) {
             this.#playTurn (this.currentPlayIndex)
         }
-        this.#whoWins (this.#checkWin (this.board.board).combination)
+
+        if (this.#checkWin (this.board.board).result) this.#whoWins (this.#checkWin (this.board.board).combination)
+        this.#endGame ()
+    }
+
+    #endGame () {
+        this.players[0]._game += 1
+        this.players[1]._game += 1
         this.#saveData (this.players)
+        console.log("        === Scoreboard ===")
+        for (let [_name, detail] of Object.entries (this.history)) {
+            console.log(`${_name}: ${detail.score} points (symbol: ${detail.symbol}) in ${detail.game} game`)
+        }
         this.#restartGame ()
     }
 
@@ -305,7 +313,7 @@ class Game {
 }
 
 // const player1 = new Person ()
-// const player2 = new Person (player1.name, player1.symbol)
+// const player2 = new Person (player1._name, player1.symbol)
 
 // const openning = new Menu ()
 // openning.displayMainMenu ()
