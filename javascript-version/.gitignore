@@ -1,0 +1,34 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+logs/*.log
+
+# Tests & coverage
+coverage/
+jest-cache/
+jest.config.js.map
+*.lcov
+essai.js
+essai.test.js
+
+# Build 
+dist/
+build/
+*.tsbuildinfo
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
