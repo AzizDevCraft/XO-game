@@ -17,11 +17,11 @@ export default class Board {
     }
 
     /**
-     * @param {string} position 
+     * @param {string | number} position 
      * @returns {boolean}
      */
     validPosition (position) {
-        position = Number (position);
+        position = typeof position === "number"? position : Number (position)
         return (
             String(position).length === 1 &&
             !isNaN (position) &&
@@ -30,12 +30,18 @@ export default class Board {
         )
     }
 
+    #validSymbol (symbol) {
+        return typeof symbol === "string" && symbol.length === 1 && isNaN (symbol) 
+    }
+
     /**
-     * @param {string} position 
+     * @param {string | number} position 
      * @param {string} symbole 
      */
     updateBoard (position, symbole) {
-        if (!this.validPosition (position)) {
+        if (!this.#validSymbol (symbole)) {
+            throw new Error ("invalid symbol !:")
+        }else if (!this.validPosition (position)) {
             throw new Error ("invalid position !:")
         }
         this.#board.splice (Number(position)-1, 1, symbole)
@@ -49,3 +55,4 @@ export default class Board {
         return this.#board 
     }
 }
+
