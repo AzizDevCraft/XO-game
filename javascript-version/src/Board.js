@@ -30,6 +30,11 @@ export default class Board {
         )
     }
 
+    /**
+     * @private
+     * @param {string} symbol 
+     * @returns {boolean}
+     */
     #validSymbol (symbol) {
         return typeof symbol === "string" && symbol.length === 1 && isNaN (symbol) 
     }
