@@ -3,6 +3,7 @@ import Board from "../src/Board.js"
 
 export default class Game {
 
+    #currentPlayIndex;
     /**
      * @param {Person[]} players 
      * @param {Board} board 
@@ -17,7 +18,7 @@ export default class Game {
         }
         this.players = players
         this.board = board
-        this.currentPlayIndex = 0
+        this.#currentPlayIndex = 0
         this.winsCombination = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]]
     }
 
@@ -26,27 +27,28 @@ export default class Game {
      * @returns {{status: string, winner? : Player}}
      */
     playTurn (position) {
-        this.board.updateBoard(position, this.players[this.currentPlayIndex]._symbol);
-        if (Game.checkWin(this.board.board, this.winsCombination)) {
-            this.players[this.currentPlayIndex]._score += 1 
-            return { status: "win", winner: this.players[this.currentPlayIndex] }
+        this.board.updateBoard(position, this.players[this.#currentPlayIndex]._symbol);
+        if (Game.checkWin(this.board.board, this.winsCombination).result) {
+            this.players[this.#currentPlayIndex]._score += 1 
+            return { status: "win", winner: this.players[this.#currentPlayIndex] }
         }
-        if (Game.checkDraw(this.board.board)) return { status: "draw" }
-        this.switchPlayer (this.currentPlayIndex)
+        if (Game.checkDraw(this.board.board, this.winsCombination)) return { status: "draw" }
+        this.switchPlayer (this.#currentPlayIndex)
         return { status: "continue" }
     }
 
     switchPlayer () {
-        this.currentPlayIndex = this.currentPlayIndex === 0 ? 1 : 0;
+        this.#currentPlayIndex = this.#currentPlayIndex === 0 ? 1 : 0;
     }
 
     /**
      * @static
      * @param {Array<number|string>} board 
+     * @param {Array<number>[]} winsCombination 
      * @returns {{combination? : number[], result : boolean}}
      */
-    static checkWin (board, winsPossibilities) {
-        for (let combo of winsPossibilities) {
+    static checkWin (board, winsCombination) {
+        for (let combo of winsCombination) {
             if (board [combo [0]] === board [combo [1]] && board [combo [1]] === board [combo [2]]) return { combination: combo, result: true }
         }
         return {result : false}
@@ -57,10 +59,11 @@ export default class Game {
      * @param {Array<number|string>} board 
      * @returns {boolean}
      */
-    static checkDraw (board) {
+    static checkDraw (board, winsCombination) {
         for (let box of board) {
             if (typeof box === "number") return false
         }
+        if (Game.checkWin (board, winsCombination).result) return false 
         return true
     }
 
