@@ -2,18 +2,18 @@ export default class Menu {
 
     #mainMenu;
     #endMenu;
+    #promptMessage;
 
     constructor (mainMenu = "", endMenu = "") {
         this.#mainMenu = mainMenu || `
 Bienvenue à X - O game
   1. Start the game 
-  2. Quit the game
-choisissez une option : `
+  2. Quit the game`
         this.#endMenu = endMenu || `
 Game Over !
   1. Restart Game
-  2. Quit Game
-choisissez une option : `
+  2. Quit Game`
+        this.#promptMessage = "choisissez une option : "
     }
 
     /**
@@ -37,5 +37,9 @@ choisissez une option : `
     
     get endMenu () {
         return this.#endMenu
+    }
+    
+    get promptMessage () {
+        return this.#promptMessage
     }
 }
