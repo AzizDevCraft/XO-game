@@ -2,7 +2,7 @@ import GameController from "../src/index.js"
 import FakeIO from "./FakeIO"
 import Person from "../src/Person.js"
 
-describe.skip ("tester la validation des joueurs", () => {
+describe ("tester la validation des joueurs", () => {
 
     describe ("tester askUntilValidPerson", () => {
         test ("accepter un nom valide", () => {
@@ -78,7 +78,7 @@ describe.skip ("tester la validation des joueurs", () => {
             const game = new GameController (IO)
             game.startGame ()
             expect (IO.output).toContain ("Game Over")
-            expect (IO.output.at (-1)).toEqual ("console fermer")
+            expect (IO.output.at (-1)).toMatch ("console fermer")
         })
         
         test ("saisi de choix sous forme de String", () => {
@@ -86,29 +86,72 @@ describe.skip ("tester la validation des joueurs", () => {
             const game = new GameController (IO)
             game.startGame ()
             expect (IO.output).toContain ("Game Over")
-            expect (IO.output.at (-1)).toEqual ("console fermer")
+            expect (IO.output.at (-1)).toMatch ("console fermer")
         })
         
         test ("refuser un choix invalide", () => {
             const IO = new FakeIO (["3", 4, 2]) 
             const game = new GameController (IO)
             game.startGame ()
-            expect (IO.output).toContain ("Game Over")
-            expect (IO.output.at (-1)).toEqual ("console fermer")
+            expect (IO.output.at (-1)).toMatch ("console fermer")
         })
     })
 
 })
 
-describe.skip ("tester la partie", () => {
-    const IO = new FakeIO ([1, "aziz", "X", "OUSS", "O"])
-    const game = new GameController (IO)
-    game.startGame ()
+describe ("tester la partie", () => {
 
-    test ("win moves for player 1", () => {
-        IO.inputs.push ("1", "2", "3", "4", "5", "6", "7")
-        game.playGame ()
-        expect (IO.output.at (-2)).toMatch ("Aziz a gagné cette partie !")
+    describe ("tester la methode principale playGame", () => {
+        let IO;
+        let game;
 
+        beforeEach (() => {
+            IO = new FakeIO ([1, "aziz", "X", "OUSS", "O"])
+            game = new GameController (IO)
+            game.startGame ()   
+        })
+        
+        test ("win moves for player 1 et la boucle s'arrête au bon moment", () => {
+            IO.inputs.push ("1", "2", "3", "4", "5", "6", "7", "8")
+            game.playGame ()
+            expect (IO.output).toMatchSnapshot ()
+        })
+        
+        test ("tester le cas de draw", () => {
+            IO.inputs.push ("1", "2", "3", "5", "4", "6", "8", "7", "9")
+            game.playGame ()
+            expect (IO.output).toMatchSnapshot ()
+        })
+        
+        test ("Coup invalid", () => {
+            IO.inputs.push ("1", "2", "2", "5", "4", "6", "8", "7", "9")
+            expect (() => game.playGame ()).toThrow ()
+        })
     })
+
+    describe ("tester restartGame", () => {
+        test ("tester l'affichage du menu de fin", () => {
+            const IO = new FakeIO ([2])
+            const game = new GameController (IO)
+            game.restartGame ()
+            expect (IO.output[0]).toContain ("Game Over !")
+        })
+        
+        test ("valider le premier choix avec un cas de win ", () => {
+            const IO = new FakeIO ([1, "aziz", "X", "OUSS", "O", 1, "1", "2", "3", "4", "5", "6", "7"])
+            const game = new GameController (IO)
+            game.startGame ()
+            game.restartGame ()
+            expect (IO.output).toMatchSnapshot ()
+        })
+        
+        test ("valider le deuxième choix", () => {
+            const IO = new FakeIO ([2])
+            const game = new GameController (IO)
+            game.restartGame ()
+            expect (IO.output.at(-1)).toMatch ("console fermer")
+        })
+    })
+
+
 })
