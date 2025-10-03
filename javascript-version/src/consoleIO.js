@@ -10,4 +10,8 @@ export default class ConsoleIO {
     write (message) {
         console.log (message)
     }
+
+    shutDown () {
+        process.exit ()
+    }
 }
