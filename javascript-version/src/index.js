@@ -35,6 +35,12 @@ export default class GameController {
         return input.trim ()
     }
 
+    /**
+     * @param {string} message 
+     * @param {(string|number, Array<string|number>) => string|number} validFunc 
+     * @param {Array<string|number>} validOptions 
+     * @returns 
+     */
     askUntilValidChoice (message, validFunc, validOptions) {
         while (true) {
             let input = this.io.read(message)
@@ -61,15 +67,6 @@ export default class GameController {
         }
     }
 
-    // #playGame () {
-    //     while (!this.#checkWin (this.board.board).result && !this.#checkDraw(this.board.board)) {
-    //         this.#playTurn (this.currentPlayIndex)
-    //     }
-
-    //     if (this.#checkWin (this.board.board).result) this.#whoWins (this.#checkWin (this.board.board).combination)
-    //     this.#endGame ()
-    // }
-
     playGame () {
         this.io.write (this.board.toString ())
         let partyData = this.game.playTurn (this.io.read (`c'est le tour de ${this.players[this.game.currentPlayIndex]._name}, choisit une position : `))
@@ -81,7 +78,19 @@ export default class GameController {
             this.io.write (`${partyData.winner._name} a gagné cette partie !`)
             this.io.write (this.board.toString ())
         }else if (partyData.status === "draw") {
+            this.io.write (this.board.toString ())
             this.io.write ("égalité !")
+        }
+    }
+
+    restartGame () {
+        this.io.write (this.menu.endMenu)
+        const choix = Number (this.askUntilValidChoice (this.menu.promptMessage, Menu.validChoice, [1,2]))
+        if (choix === 1) {
+            this.board.resetBoard ()
+            return this.playGame ()
+        }else if (choix === 2) {
+            return this.quitGame ()
         }
     }
 
