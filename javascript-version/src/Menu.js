@@ -22,10 +22,16 @@ Game Over !
      * @param {Array} validOptions
      * @returns {number}
      */
-    static choice (option, validOptions) {
-        if (typeof option !== "number" && !(typeof option === "string" && isNaN (option))) {
+    static validChoice (option, validOptions) {
+        if (!Array.isArray (validOptions)) {
+            throw new TypeError ("validOptions doit seulement être de type Array")
+        }
+        if (typeof option !== "number" && typeof option !== "string") {
             throw new SyntaxError ("choix invalide !")
-        }else if (!validOptions.includes (option)) {
+        }
+        validOptions = validOptions.map (item => !isNaN (item)? Number (item) : item )
+        if (!isNaN (option)) option = Number (option)
+        if (!validOptions.includes (option)) {
             throw new Error ("choix invalide !")
         }
         return option
