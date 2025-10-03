@@ -75,4 +75,8 @@ export default class Game {
         players.forEach (player => player._game += 1)
     }
 
+    get currentPlayIndex () {
+        return this.#currentPlayIndex
+    }
+
 }
