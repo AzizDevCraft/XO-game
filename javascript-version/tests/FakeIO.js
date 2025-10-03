@@ -5,10 +5,15 @@ export default class FakeIO {
     }
 
     read (message = "") {
+        this.output.push (message)
         return this.inputs.shift ()
     }
 
     write (message) {
         this.output.push (message)
+    }
+
+    shutDown () {
+        this.write ("console fermer")
     }
 }

@@ -7,7 +7,7 @@ import ConsoleIO from "./consoleIO.js"
 
 const prompt = PromptSync ()
 
-class GameController {
+export default class GameController {
 
     /**
      * @param {ConsoleIO} io 
@@ -17,22 +17,8 @@ class GameController {
         this.board = new Board ()
         this.players = []
         this.menu = new Menu ()
+        this.game;
     }
-
-    // #startGame () {
-    //     const startMenu = new Menu ()
-    //     const choice = startMenu.displayMainMenu ()
-    //     if (choice === 2) this.#quitGame ()
-    //     else {
-    //         console.log ("player 1 identifiez-vous :")
-    //         const playerA = new Person ()
-    //         this.players.push (this.#oldPlayer (playerA))
-    //         console.log ("player 2 identifiez-vous :")
-    //         const playerB = new Person (this.players[0]._name, this.players[0]._symbol)
-    //         this.players.push (this.#oldPlayer (playerB))
-    //         return this.#playGame ()
-    //     }
-    // }
 
     /**
      * input control
@@ -41,7 +27,7 @@ class GameController {
      * @param {string} existingValue 
      * @returns {string}
      */
-    askUntilValid (message, validFunc, existingValue) {
+    askUntilValidPerson (message, validFunc, existingValue) {
         let input = this.io.read(message)
         while (!validFunc(input, existingValue).valid) {
             input = this.io.read(validFunc(input, existingValue).errorMessage +" essaye un autre : ")
@@ -49,17 +35,59 @@ class GameController {
         return input.trim ()
     }
 
+    askUntilValidChoice (message, validFunc, validOptions) {
+        while (true) {
+            let input = this.io.read(message)
+            try {
+                return validFunc (input, validOptions)
+            }catch (e) {
+                this.io.write (e.message)
+            }
+        }
+    }
+
     startGame () {
         this.io.write (this.menu.mainMenu)
-        const choix = this.io.read (this.menu.promptMessage)
+        const choix = Number (this.askUntilValidChoice (this.menu.promptMessage, Menu.validChoice, [1,2]))
         if (choix === 1) {
             this.io.write ("player 1 identifiez-vous :")
-            const playerA = new Person (this.askUntilValid ("Donner votre nom : ", Person.validName, ""), this.askUntilValid ("choisissez votre symbol : ", Person.validSymbol, "").toUpperCase ())
-            this.players.push (playerA)
+            const playerA = new Person (this.askUntilValidPerson ("Donner votre nom : ", Person.validName, ""), this.askUntilValidPerson ("choisissez votre symbol : ", Person.validSymbol, "").toUpperCase ())
+            this.io.write ("player 2 identifiez-vous :")
+            const playerB = new Person (this.askUntilValidPerson ("Donner votre nom : ", Person.validName, playerA._name), this.askUntilValidPerson ("choisissez votre symbol : ", Person.validSymbol, playerA._symbol).toUpperCase ())
+            this.players.push (playerA, playerB)
+            this.game = new Game (this.players, this.board)
+        } else if (choix === 2) {
+            this.quitGame ()
         }
+    }
+
+    // #playGame () {
+    //     while (!this.#checkWin (this.board.board).result && !this.#checkDraw(this.board.board)) {
+    //         this.#playTurn (this.currentPlayIndex)
+    //     }
+
+    //     if (this.#checkWin (this.board.board).result) this.#whoWins (this.#checkWin (this.board.board).combination)
+    //     this.#endGame ()
+    // }
+
+    playGame () {
+        this.io.write (this.board.toString ())
+        let partyData = this.game.playTurn (this.io.read (`c'est le tour de ${this.players[this.game.currentPlayIndex]._name}, choisit une position : `))
+        while ( partyData.status === "continue") {
+            this.io.write (this.board.toString ())
+            partyData = this.game.playTurn (this.io.read (`c'est le tour de ${this.players[this.game.currentPlayIndex]._name}, choisit une position : `))
+        }
+        if (partyData.status === "win") {
+            this.io.write (`${partyData.winner._name} a gagné cette partie !`)
+            this.io.write (this.board.toString ())
+        }else if (partyData.status === "draw") {
+            this.io.write ("égalité !")
+        }
+    }
+
+    quitGame () {
+        this.io.write ("Game Over")
+        this.io.shutDown ()
     }
 }
 
-
-const party = new GameController (new ConsoleIO (prompt))
-party.startGame ()
