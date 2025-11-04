@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./output.css">
+    <title>XO - Game</title>
+</head>
+<body class="h-screen bg-slate-950 flex-col flex-center text-white text-xl">
+    <template class="" id="tpl-entete">    
+        <div class="text-center mb-16 text-3xl font-bold" id="title">XO - Game</div>
+        <button class="bg-blue-600 px-4 py-2 rounded-md mb-16 border-2 border-transparent hover:bg-white/10 hover:border-blue-600 hover:text-blue-600 duration-300" id="start-button">Start Game</button>
+        <div class="mb-16" id="player-register" hidden>
+            <label class="block mb-4" for="player-name">
+            Donner votre Nom :  <input type="text" class="px-2 ml-1 rounded-md" id="player-name" placeholder="Ex : Aziz">
+            </label>
+            <label class="block" for="player-symbol">
+            Choisissez votre Symbole :  <input type="text" class="px-2 ml-1 rounded-md" id="player-symbol" placeholder="Ex : X">
+            </label>
+        </div>
+    </template>
+    <template class="" id="tpl-board">    
+        <div class="w-96 h-96 bg-radial from-white from-20% to-slate-600 grid grid-cols-3 gap-0.5" id="board">
+            <div class="w-full h-full bg-slate-950" data-position="1"></div>
+            <div class="w-full h-full bg-slate-950" data-position="2"></div>
+            <div class="w-full h-full bg-slate-950" data-position="3"></div>
+            <div class="w-full h-full bg-slate-950" data-position="4"></div>
+            <div class="w-full h-full bg-slate-950" data-position="5"></div>
+            <div class="w-full h-full bg-slate-950" data-position="6"></div>
+            <div class="w-full h-full bg-slate-950" data-position="7"></div>
+            <div class="w-full h-full bg-slate-950" data-position="8"></div>
+            <div class="w-full h-full bg-slate-950" data-position="9"></div>
+        </div>
+    </template>
+    <template class="" id="tpl-footer">    
+        <div class="mt-12" id="footer">
+            <p class="text-center">playTurn :</p>
+        </div>
+    </template>
+</body>
+</html>

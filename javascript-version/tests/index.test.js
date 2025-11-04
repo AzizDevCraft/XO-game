@@ -1,6 +1,6 @@
 import GameController from "../src/index.js"
 import FakeIO from "./FakeIO"
-import Person from "../src/Person.js"
+import Person from "../src/core/Person.js"
 
 describe ("tester la validation des joueurs", () => {
 

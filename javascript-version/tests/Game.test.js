@@ -1,6 +1,6 @@
-import Game from "../src/Game.js"
-import Person from "../src/Person.js"
-import Board from "../src/Board.js"
+import Game from "../src/core/Game.js"
+import Person from "../src/core/Person.js"
+import Board from "../src/core/Board.js"
 
 let joueurs, plateau, jeux;
 
