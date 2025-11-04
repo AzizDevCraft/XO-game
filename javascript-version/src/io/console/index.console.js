@@ -1,9 +1,9 @@
 import PromptSync from "prompt-sync"
-import Person from "./core/Person.js"
-import Menu from "./core/Menu.js"
-import Board from "./core/Board.js"
-import Game from "./core/Game.js"
-import ConsoleIO from "./io/console/consoleIO.js"
+import Person from "../../core/Person.js"
+import Menu from "../../core/Menu.js"
+import Board from "../../core/Board.js"
+import Game from "../../core/Game.js"
+import ConsoleIO from "./consoleIO.js"
 
 const prompt = PromptSync ()
 

@@ -1,5 +1,5 @@
-import Person from "../src/Person.js"
-import Board from "../src/Board.js"
+import Person from "./Person.js"
+import Board from "./Board.js"
 
 export default class Game {
 

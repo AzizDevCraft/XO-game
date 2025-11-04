@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./output.css">
+    <title>XO - Game</title>
+</head>
+<body class="h-screen bg-slate-950 flex-col flex-center text-white text-xl">
+    <div class="text-center mb-16 text-3xl font-bold" id="title">Player 1</div>
+    <div class="mb-16" id="player-register">
+        <label class="block mb-4" for="player-1-name">
+           Donner votre Nom :  <input type="text" class="px-2 ml-1 rounded-md" name="playerName" id="player-1-name">
+        </label>
+        <label class="block" for="player-1-symbol">
+           Choisissez votre Symbole :  <input type="text" class="px-2 ml-1 rounded-md" name="playerSymbol" id="player-1-symbol">
+        </label>
+    </div>
+    <div class="w-96 h-96 bg-radial from-white from-20% to-slate-600 grid grid-cols-3 gap-0.5" id="board">
+        <div class="w-full h-full bg-slate-950" data-position="1"></div>
+        <div class="w-full h-full bg-slate-950" data-position="2"></div>
+        <div class="w-full h-full bg-slate-950" data-position="3"></div>
+        <div class="w-full h-full bg-slate-950" data-position="4"></div>
+        <div class="w-full h-full bg-slate-950" data-position="5"></div>
+        <div class="w-full h-full bg-slate-950" data-position="6"></div>
+        <div class="w-full h-full bg-slate-950" data-position="7"></div>
+        <div class="w-full h-full bg-slate-950" data-position="8"></div>
+        <div class="w-full h-full bg-slate-950" data-position="9"></div>
+    </div>
+</body>
+</html>

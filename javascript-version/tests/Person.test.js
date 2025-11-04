@@ -1,4 +1,4 @@
-import Person from "../src/Person.js"
+import Person from "../src/core/Person.js"
 
 describe ("validation de nom", () => {
     test ("refuse un nom trop court et renvoie le bon message", () => {

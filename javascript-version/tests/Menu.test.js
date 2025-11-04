@@ -1,4 +1,4 @@
-import Menu from "../src/Menu.js"
+import Menu from "../src/core/Menu.js"
 
 describe ("tester la methode validChoice", () => {
 

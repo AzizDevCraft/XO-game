@@ -1,4 +1,4 @@
-import Board from "../src/Board.js"
+import Board from "../src/core/Board.js"
 
 describe ("les action valide de board", () => {
     const board = new Board ()

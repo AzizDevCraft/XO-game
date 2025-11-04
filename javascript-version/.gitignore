@@ -27,6 +27,7 @@ essai.test.js
 dist/
 build/
 *.tsbuildinfo
+output.css
 
 # Éditeurs
 .vscode/
