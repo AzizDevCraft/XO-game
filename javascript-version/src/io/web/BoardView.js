@@ -1,19 +1,13 @@
 export default class BoardView {
 
-    #board;
-
-    /**
-     * @param {Array<string|number>}
-     */
-    constructor (board, root = document.body) {
-        this.#board = board
+    constructor (root = document.body) {
         this.root = root
     }
 
     renderBoard () {
-        const boardTemplate = document.querySelector ("#tpl-board")
-        const tplFragment = boardTemplate.content.cloneNode (true)
-        this.root.append (tplFragment)
+        const tplBoard = document.querySelector ("#tpl-board")
+        const boardFragment = tplBoard.content.cloneNode (true)
+        this.root.append (boardFragment)
         
         this.cells = this.root.querySelector ("#board").children
     }
