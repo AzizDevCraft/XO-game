@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./output.css">
+    <script type="module" src="../src/io/web/test-boardview.js"></script>
+    <script src="https://kit.fontawesome.com/0cde4900c8.js" crossorigin="anonymous"></script>
     <title>XO - Game</title>
 </head>
 <body class="h-screen bg-slate-950 flex-col flex-center text-white text-xl">
@@ -20,16 +22,16 @@
         </div>
     </template>
     <template class="" id="tpl-board">    
-        <div class="w-96 h-96 bg-radial from-white from-20% to-slate-600 grid grid-cols-3 gap-0.5" id="board">
-            <div class="w-full h-full bg-slate-950" data-position="1"></div>
-            <div class="w-full h-full bg-slate-950" data-position="2"></div>
-            <div class="w-full h-full bg-slate-950" data-position="3"></div>
-            <div class="w-full h-full bg-slate-950" data-position="4"></div>
-            <div class="w-full h-full bg-slate-950" data-position="5"></div>
-            <div class="w-full h-full bg-slate-950" data-position="6"></div>
-            <div class="w-full h-full bg-slate-950" data-position="7"></div>
-            <div class="w-full h-full bg-slate-950" data-position="8"></div>
-            <div class="w-full h-full bg-slate-950" data-position="9"></div>
+        <div class="w-96 h-96 bg-radial from-white from-10% to-slate-800 grid grid-cols-3 grid-rows-3 gap-0.5" id="board">
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="0" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="1" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="2" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="3" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="4" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="5" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="6" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="7" data-play=""></div>
+            <div class="w-full h-full bg-slate-950 flex-center" data-position="8" data-play=""></div>
         </div>
     </template>
     <template class="" id="tpl-footer">    
