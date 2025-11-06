@@ -4,25 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./output.css">
-    <script type="module" src="../src/io/web/test-menuView.js"></script>
+    <script type="module" src="../src/io/web/test-webIO.js"></script>
     <script src="https://kit.fontawesome.com/0cde4900c8.js" crossorigin="anonymous"></script>
     <title>XO - Game</title>
 </head>
 <body class="h-screen bg-slate-950 flex-col flex-center text-white text-xl">
     <template id="tpl-entete">    
-        <div class="text-center mb-12 text-3xl font-bold" id="title">XO - Game</div>
+        <div class="text-center text-3xl font-bold" id="title">XO - Game</div>
         <div class="flex items-center gap-10 my-12" id="choice">
             <button class="bg-blue-600 px-4 py-2 rounded-md border-2 border-transparent hover:bg-white/10 hover:border-blue-600 hover:text-blue-600 duration-300" id="start-button">Start Game</button>
             <button class="bg-blue-600 px-4 py-2 rounded-md border-2 border-transparent hover:bg-white/10 hover:border-blue-600 hover:text-blue-600 duration-300" id="start-button" hidden>Quit Game</button>
         </div>
-        <div class="my-12" id="player-register" hidden>
+        <form class="my-12" id="player-register" hidden>
             <label class="block mb-4" for="player-name">
-            Donner votre Nom :  <input type="text" class="px-2 ml-1 rounded-md" id="player-name" placeholder="Ex : Aziz">
+            Donner votre Nom :  <input type="text" class="px-2 ml-1 rounded-md" id="player-name" placeholder="Ex : Aziz" required>
             </label>
             <label class="block" for="player-symbol">
-            Choisissez votre Symbole :  <input type="text" class="px-2 ml-1 rounded-md" id="player-symbol" placeholder="Ex : X">
+            Choisissez votre Symbole :  <input type="text" class="px-2 ml-1 rounded-md" id="player-symbol" placeholder="Ex : X" required>
             </label>
-        </div>
+        </form>
     </template>
     <template id="tpl-board">    
         <div class="w-96 h-96 bg-radial from-white from-10% to-slate-800 grid grid-cols-3 grid-rows-3 gap-0.5" id="board">
