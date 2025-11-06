@@ -1,7 +1,10 @@
 export default class BoardView {
 
+    #handlers;
+
     constructor (root = document.body) {
         this.root = root
+        this.#handlers = new Map ()
     }
 
     renderBoard () {
@@ -51,8 +54,19 @@ export default class BoardView {
      */
     onClick (handler) {
         [].forEach.call (this.cells, (cell) => {
-            cell.addEventListener ("click", (event) => handler (event, Number (cell.dataset.position)))
+            const clickHandler = (event) => 
+                handler (event, Number (cell.dataset.position))
+            cell.addEventListener ("click", clickHandler)
+            this.#handlers.set (cell, clickHandler)
         })
+    }
+
+    disableBoard () {
+        [].forEach.call (this.cells, (cell) => {
+            cell.removeEventListener ("click", this.#handlers.get (cell))
+        })
+
+        this.#handlers.clear ()
     }
     
 }
