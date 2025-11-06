@@ -12,8 +12,8 @@ export default class WebIO {
     init () {
         this.menu.renderTopBar ()
         this.board.renderBoard ()
-        this.board.onClick?. (this.eventHandlers.onCellsClick)
-        this.menu.onInput?. (this.eventHandlers.onValid)
+        this.board.onClick (this.eventHandlers?.onClick)
+        this.menu.onInput (this.eventHandlers?.onValid)
     }
 
     /**
@@ -32,6 +32,10 @@ export default class WebIO {
             this.menu.displayMainMenu (message)
         else if (state === "end")
             this.menu.displayEndMenu (message)
+    }
+
+    disableInteractions() {
+        this.board.disableBoard ()
     }
 
     showWinner(cells) {
