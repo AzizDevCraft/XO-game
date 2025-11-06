@@ -12,8 +12,10 @@ export default class WebIO {
     init () {
         this.menu.renderTopBar ()
         this.board.renderBoard ()
-        this.board.onClick (this.eventHandlers?.onClick)
-        this.menu.onInput (this.eventHandlers?.onValid)
+        this.board.onClickCell (this.eventHandlers?.onClickCell)
+        this.menu.onInput (this.eventHandlers?.onInput)
+        this.menu.onSubmit (this.eventHandlers?.onSubmit)
+        this.menu.onClickMenuBtns (this.eventHandlers?.onClickBtns)
     }
 
     /**
@@ -23,10 +25,18 @@ export default class WebIO {
         this.eventHandlers = handlers 
     }
 
+    /**
+     * @param {string} symbol 
+     * @param {number} position 
+     */
     updateBoardCell(symbol, position) {
         this.board.updateCell (symbol, position)
     }
 
+    /**
+     * @param {string} message 
+     * @param {string} state 
+     */
     displayMenu(message, state) {
         if (state === "begin")
             this.menu.displayMainMenu (message)
@@ -34,10 +44,21 @@ export default class WebIO {
             this.menu.displayEndMenu (message)
     }
 
+    /**
+     * @param {HTMLInputElement} input 
+     * @param {string} errorMsg 
+     */
+    displayErrorInput (input, errorMsg) {
+        this.menu.displayError (input, errorMsg)
+    }
+
     disableInteractions() {
         this.board.disableBoard ()
     }
 
+    /**
+     * @param {Array<number>} cells 
+     */
     showWinner(cells) {
         this.board.highlightWinner (cells)
     }

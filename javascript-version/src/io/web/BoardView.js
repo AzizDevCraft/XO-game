@@ -52,10 +52,9 @@ export default class BoardView {
     /**
      * @param {Function} handler 
      */
-    onClick (handler) {
+    onClickCell (handler) {
         [].forEach.call (this.cells, (cell) => {
-            const clickHandler = (event) => 
-                handler (event, Number (cell.dataset.position))
+            const clickHandler = (event) => handler (event)
             cell.addEventListener ("click", clickHandler)
             this.#handlers.set (cell, clickHandler)
         })

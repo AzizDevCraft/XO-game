@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./output.css">
-    <script type="module" src="../src/io/web/test-webIO.js"></script>
+    <script type="module" src="../src/io/web/test-controller.js"></script>
     <script src="https://kit.fontawesome.com/0cde4900c8.js" crossorigin="anonymous"></script>
     <title>XO - Game</title>
 </head>
@@ -17,11 +17,12 @@
         </div>
         <form class="my-12" id="player-register" hidden>
             <label class="block mb-4" for="player-name">
-            Donner votre Nom :  <input type="text" class="px-2 ml-1 rounded-md" id="player-name" placeholder="Ex : Aziz" required>
+            Donner votre Nom : <input type="text" name="playerName" class="px-2 ml-1 rounded-md border border-slate-950 focus:outline-none focus:border-white focus:ring-1 focus:ring-white" id="player-name" placeholder="Ex : Aziz" required>
             </label>
             <label class="block" for="player-symbol">
-            Choisissez votre Symbole :  <input type="text" class="px-2 ml-1 rounded-md" id="player-symbol" placeholder="Ex : X" required>
+            Choisissez votre Symbole : <input type="text" name="playerSymbol" class="px-2 ml-1 rounded-md border border-slate-950 focus:outline-none focus:border-white focus:ring-1 focus:ring-white" id="player-symbol" placeholder="Ex : X" required>
             </label>
+            <button type="submit" hidden></button>
         </form>
     </template>
     <template id="tpl-board">    
