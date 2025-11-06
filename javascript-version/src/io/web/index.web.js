@@ -57,7 +57,7 @@ export default class WebController {
     #onClickBtns (event) {
         const btnClicked = event.target
         if (btnClicked === event.currentTarget.firstElementChild)
-            this.gameInterface.displayMenu ("Bienvenue à X - O game! Veuillez s'identifiez :", "begin")
+            this.gameInterface.displayMenu ("Bienvenue à X - O game! Player 1 identifiez-vous :", "begin")
         else {
             //la partie de quit Game 
         }
@@ -81,8 +81,9 @@ export default class WebController {
         const response = validFn (input.value.trim (), ref)
         if (!response.valid) {
             this.gameInterface.displayErrorInput (input, response.errorMessage)
+        }else {
+            this.gameInterface.removeErrorInput (input)
         }
-
     }
 
     /**
@@ -94,5 +95,17 @@ export default class WebController {
         const data = new FormData (form)
         const playerName = data.get ("playerName")
         const playerSymbol = data.get ("playerSymbol")
+        const errorInput = form.querySelector (".error-state")
+        if (errorInput)
+            errorInput.focus ()
+        else {
+            this.players.push (new Person (playerName, playerSymbol))
+            form.reset ()
+            if (this.players.length < 2) {
+                this.gameInterface.displayMenu ("Bienvenue à X - O game! Player 2 identifiez-vous :", "begin")
+            }else {
+                form.setAttribute ("hidden", "")
+            }
+        }
     }
 }

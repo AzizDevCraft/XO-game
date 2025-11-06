@@ -52,6 +52,13 @@ export default class WebIO {
         this.menu.displayError (input, errorMsg)
     }
 
+    /**
+     * @param {HTMLInputElement} input 
+     */
+    removeErrorInput (input) {
+        this.menu.removeError (input)
+    }
+
     disableInteractions() {
         this.board.disableBoard ()
     }

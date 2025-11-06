@@ -16,12 +16,16 @@ export default class MenuView {
     displayMainMenu (message) {
         this.buttons.setAttribute ("hidden", "")
         const title = this.root.querySelector ("#title")
-        const msg = document.createElement ("h2")
-        msg.innerText = message
-        msg.id = "msg"
-        msg.classList.add ("mt-12")
-        title.after (msg)
-        this.form.removeAttribute ("hidden")
+        let msg = title.nextElementSibling.tagName === "H2" ? title.nextElementSibling : undefined
+        console.log (title.nextElementSibling.tagName)
+        if (!msg) {
+            msg = document.createElement ("h2")
+            msg.id = "msg"
+            msg.classList.add ("mt-12")
+            title.after (msg)
+        }
+        msg.innerText = message  
+        this.form.removeAttribute ("hidden")      
     }
 
     displayEndMenu (message) {
@@ -37,19 +41,28 @@ export default class MenuView {
      */
     displayError (input, message) {
         input.classList.remove ("focus:border-white", "focus:ring-white", "border-slate-950")
-        input.classList.add ("focus:border-red-400", "focus:ring-red-300", "border-red-400")
+        input.classList.add ("focus:border-red-400", "focus:ring-red-300", "border-red-400", "error-state")
+        
         if (input.nextElementSibling?.tagName !== "P") {
             const errorMsg = document.createElement ("p")
             errorMsg.innerText = message
-            errorMsg.setAttribute ("class", "text-red-400 text-xs mt-1 errorMsg")
+            errorMsg.setAttribute ("class", "pl-4 text-red-400 text-xs")
             input.after (errorMsg)
         }
         else 
             input.nextElementSibling.innerText = message
     }
 
+    /**
+     * @param {HTMLInputElement} input 
+     */
     removeError (input) {
-
+        const errorMsg = input.nextElementSibling
+        if (errorMsg) {
+            input.classList.remove ("focus:border-red-400", "focus:ring-red-300", "border-red-400", "error-state")
+            input.classList.add ("focus:border-white", "focus:ring-white", "border-slate-950")
+            errorMsg.remove ()
+        }
     }
 
     reset () {

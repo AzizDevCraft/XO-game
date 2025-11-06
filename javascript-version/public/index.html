@@ -15,7 +15,7 @@
             <button class="bg-blue-600 px-4 py-2 rounded-md border-2 border-transparent hover:bg-white/10 hover:border-blue-600 hover:text-blue-600 duration-300" id="start-button">Start Game</button>
             <button class="bg-blue-600 px-4 py-2 rounded-md border-2 border-transparent hover:bg-white/10 hover:border-blue-600 hover:text-blue-600 duration-300" id="start-button" hidden>Quit Game</button>
         </div>
-        <form class="my-12" id="player-register" hidden>
+        <form class="mt-12" id="player-register" hidden>
             <label class="block mb-4" for="player-name">
             Donner votre Nom : <input type="text" name="playerName" class="px-2 ml-1 rounded-md border border-slate-950 focus:outline-none focus:border-white focus:ring-1 focus:ring-white" id="player-name" placeholder="Ex : Aziz" required>
             </label>
@@ -26,7 +26,7 @@
         </form>
     </template>
     <template id="tpl-board">    
-        <div class="w-96 h-96 bg-radial from-white from-10% to-slate-800 grid grid-cols-3 grid-rows-3 gap-0.5" id="board">
+        <div class="w-96 h-96 mt-12 bg-radial from-white from-10% to-slate-800 grid grid-cols-3 grid-rows-3 gap-0.5" id="board">
             <div class="w-full h-full bg-slate-950 flex-center" data-position="0" data-play=""></div>
             <div class="w-full h-full bg-slate-950 flex-center" data-position="1" data-play=""></div>
             <div class="w-full h-full bg-slate-950 flex-center" data-position="2" data-play=""></div>
