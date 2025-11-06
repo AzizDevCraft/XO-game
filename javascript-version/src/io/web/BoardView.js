@@ -41,7 +41,7 @@ export default class BoardView {
     highlightWinner (cells) {
         [].forEach.call (this.cells, (cell) => {
             if (cells.includes(Number(cell.dataset.position))){
-                cell.firstElementChild.classList.add ("text-red-500")
+                cell.firstElementChild?.classList.add ("text-red-500")
             }
         })
     }
