@@ -37,11 +37,12 @@ export default class WebController {
 
     playGame () {
         this.gameParty = new Game (this.players, this.board)
-        this.gameInterface.displayTurn (this.players[0]._name, this.players[0]._symbol)
+        this.gameInterface.displayTurn (this.players[0]._name, this.players[0]._symbol, "C'est le tour de ")
     }
 
     endGame () {
         this.gameInterface.disableInteractions ()
+        this.gameInterface.displayMenu ("end")
     }
 
     /**
@@ -54,11 +55,13 @@ export default class WebController {
         this.gameInterface.updateBoardCell (symbol, position)
         if (partyData.status === "win") {
             this.gameInterface.showWinner (partyData.combo)
+            console.log (partyData.winner._name)
+            this.gameInterface.displayTurn (partyData.winner._name, partyData.winner._symbol, "Le Grand gagnant est ")
             this.endGame ()
         } else if (partyData.status === "draw") {
             this.endGame ()
         } else {
-            this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, this.players[this.gameParty.currentPlayIndex]._symbol )
+            this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, this.players[this.gameParty.currentPlayIndex]._symbol, "C'est le tour de ")
         }
     }
 
@@ -68,7 +71,7 @@ export default class WebController {
     #onClickBtns (event) {
         const btnClicked = event.target
         if (btnClicked === event.currentTarget.firstElementChild)
-            this.gameInterface.displayMenu ("Bienvenue à X - O game! Player 1 identifiez-vous :", "begin")
+            this.gameInterface.displayMenu ("begin", "Bienvenue à X - O game! Player 1 identifiez-vous :")
         else {
             //la partie de quit Game 
         }
@@ -113,7 +116,7 @@ export default class WebController {
             this.players.push (new Person (playerName, playerSymbol))
             form.reset ()
             if (this.players.length < 2) {
-                this.gameInterface.displayMenu ("Bienvenue à X - O game! Player 2 identifiez-vous :", "begin")
+                this.gameInterface.displayMenu ("begin", "Bienvenue à X - O game! Player 2 identifiez-vous :")
                 document.activeElement.blur()
             }else {
                 form.setAttribute ("hidden", "")
