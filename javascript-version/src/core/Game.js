@@ -24,13 +24,14 @@ export default class Game {
 
     /**
      * @param {number} position 
-     * @returns {{status: string, winner? : Player}}
+     * @returns {{status: string, winner? : Player, combo? : Array<Number>}}
      */
     playTurn (position) {
-        this.board.updateBoard(position, this.players[this.#currentPlayIndex]._symbol);
-        if (Game.checkWin(this.board.board, this.winsCombination).result) {
+        this.board.updateBoard(position, this.players[this.#currentPlayIndex]._symbol)
+        const winTest = Game.checkWin(this.board.board, this.winsCombination)
+        if (winTest.result) {
             this.players[this.#currentPlayIndex]._score += 1 
-            return { status: "win", winner: this.players[this.#currentPlayIndex] }
+            return { status: "win", winner: this.players[this.#currentPlayIndex], combo : winTest.combination}
         }
         if (Game.checkDraw(this.board.board, this.winsCombination)) return { status: "draw" }
         this.switchPlayer (this.#currentPlayIndex)

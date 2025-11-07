@@ -13,22 +13,49 @@ export default class MenuView {
         this.buttons = this.root.querySelector ("#choice")
     }
 
+    /**
+     * @param {string} message 
+     */
     displayMainMenu (message) {
         this.buttons.setAttribute ("hidden", "")
-        const title = this.root.querySelector ("#title")
-        let msg = title.nextElementSibling.tagName === "H2" ? title.nextElementSibling : undefined
+        this.title = this.root.querySelector ("#title")
+        let msg = this.title.nextElementSibling.id === "welcome-msg" ? this.title.nextElementSibling : undefined
         if (!msg) {
             msg = document.createElement ("h2")
-            msg.id = "msg"
+            msg.id = "welcome-msg"
             msg.classList.add ("mt-12")
-            title.after (msg)
+            this.title.after (msg)
         }
         msg.innerText = message  
         this.form.removeAttribute ("hidden")      
     }
 
+    /**
+     * @param {string} playerName 
+     * @param {string} playerSymbol 
+     */
+    displayMiddleParty (playerName, playerSymbol) {
+        let msg = this.title.nextElementSibling
+        let player = msg.firstElementChild
+        if (msg.id === "welcome-msg") {
+            msg.remove ()
+            msg = document.createElement ("h2")
+            msg.id = "play-turn-msg"
+            msg.innerText = "C'est le tour de "
+            msg.classList.add ("mt-12")
+            player = document.createElement ("span")
+            player.setAttribute ("class", "bg-blue-600 rounded-md px-2 py-1")
+            msg.append (player)
+            this.title.after (msg)
+        } 
+        player.innerText = `${playerName} (${playerSymbol})`
+    }
+
+    /**
+     * @param {string} message 
+     */
     displayEndMenu (message) {
-        this.root.querySelector ("#msg").innerText = message
+        this.root.querySelector ("#welcome-msg").innerText = message
         this.buttons.removeAttribute ("hidden") 
         this.buttons.firstElementChild.innerText = "Restart Game"
         this.buttons.lastElementChild.removeAttribute ("hidden")
@@ -67,7 +94,7 @@ export default class MenuView {
     }
 
     reset () {
-        this.root.querySelector ("#msg")?.remove ()
+        this.root.querySelector ("#welcome-msg")?.remove ()
         this.form.setAttribute ("hidden", "")
         this.buttons.lastElementChild.setAttribute ("hidden", "")
         this.buttons.firstElementChild.innerText = "Start Game"
@@ -80,10 +107,16 @@ export default class MenuView {
         this.form.addEventListener ("change", (event) => handler(event))
     }
 
+    /**
+     * @param {Function} handler 
+     */
     onSubmit (handler) {
         this.form.addEventListener ("submit", (event) => handler (event))
     }
 
+    /**
+     * @param {Function} handler 
+     */
     onClickMenuBtns (handler) {
         this.buttons.addEventListener ("click", (event) => handler (event))
     }
