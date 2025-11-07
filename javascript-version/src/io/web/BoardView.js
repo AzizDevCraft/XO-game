@@ -20,7 +20,7 @@ export default class BoardView {
      * @param {number} position 
      */
     updateCell (symbol, position) {
-        const playedCell = [].find.call (this.cells, (cell) => Number(cell.dataset.position) === position)
+        const playedCell = [].find.call (this.cells, (cell) => Number(cell.dataset.position) === position -1)
         if (!playedCell.dataset.play) {
             const icon = document.createElement("i")
             icon.setAttribute ("class", `text-7xl fa-solid fa-${symbol.toLowerCase ()}`)
@@ -28,7 +28,7 @@ export default class BoardView {
             playedCell.append (icon)
         }
         else 
-            return
+            return false
     }
 
     resetBoard () {

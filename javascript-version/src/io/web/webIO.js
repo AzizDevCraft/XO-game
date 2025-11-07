@@ -37,11 +37,19 @@ export default class WebIO {
      * @param {string} message 
      * @param {string} state 
      */
-    displayMenu(message, state) {
+    displayMenu (message, state) {
         if (state === "begin")
             this.menu.displayMainMenu (message)
         else if (state === "end")
             this.menu.displayEndMenu (message)
+    }
+
+    /**
+     * @param {string} playerName 
+     * @param {string} playerSymbol 
+     */
+    displayTurn (playerName, playerSymbol) {
+        this.menu.displayMiddleParty (playerName, playerSymbol)
     }
 
     /**

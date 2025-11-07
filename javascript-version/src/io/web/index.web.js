@@ -36,18 +36,30 @@ export default class WebController {
     }
 
     playGame () {
-        
+        this.gameParty = new Game (this.players, this.board)
+        this.gameInterface.displayTurn (this.players[0]._name, this.players[0]._symbol)
     }
 
     endGame () {
-
+        this.gameInterface.disableInteractions ()
     }
 
     /**
      * @param {PointerEvent} event 
      */
     #onClickCell (event) {
-
+        const symbol = this.players[this.gameParty.currentPlayIndex]._symbol 
+        const position = Number (event.currentTarget.dataset.position) + 1 
+        const partyData = this.gameParty.playTurn(position)
+        this.gameInterface.updateBoardCell (symbol, position)
+        if (partyData.status === "win") {
+            this.gameInterface.showWinner (partyData.combo)
+            this.endGame ()
+        } else if (partyData.status === "draw") {
+            this.endGame ()
+        } else {
+            this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, this.players[this.gameParty.currentPlayIndex]._symbol )
+        }
     }
 
     /**
