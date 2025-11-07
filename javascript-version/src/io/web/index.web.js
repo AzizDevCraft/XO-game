@@ -33,11 +33,10 @@ export default class WebController {
             onSubmit : (event) => this.#onSubmit (event)
         })
         this.gameInterface.init ()
-
     }
 
     playGame () {
-
+        
     }
 
     endGame () {
@@ -103,8 +102,10 @@ export default class WebController {
             form.reset ()
             if (this.players.length < 2) {
                 this.gameInterface.displayMenu ("Bienvenue à X - O game! Player 2 identifiez-vous :", "begin")
+                document.activeElement.blur()
             }else {
                 form.setAttribute ("hidden", "")
+                this.playGame ()
             }
         }
     }

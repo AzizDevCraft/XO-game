@@ -17,7 +17,6 @@ export default class MenuView {
         this.buttons.setAttribute ("hidden", "")
         const title = this.root.querySelector ("#title")
         let msg = title.nextElementSibling.tagName === "H2" ? title.nextElementSibling : undefined
-        console.log (title.nextElementSibling.tagName)
         if (!msg) {
             msg = document.createElement ("h2")
             msg.id = "msg"
@@ -41,7 +40,9 @@ export default class MenuView {
      */
     displayError (input, message) {
         input.classList.remove ("focus:border-white", "focus:ring-white", "border-slate-950")
-        input.classList.add ("focus:border-red-400", "focus:ring-red-300", "border-red-400", "error-state")
+        input.classList.add ("focus:border-red-400", "focus:ring-red-300", "border-red-400", "error-state", "animate-input-error")
+        
+        setTimeout(() => input.classList.remove("animate-input-error"), 600)
         
         if (input.nextElementSibling?.tagName !== "P") {
             const errorMsg = document.createElement ("p")
