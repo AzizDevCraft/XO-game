@@ -33,29 +33,27 @@ export default class MenuView {
     /**
      * @param {string} playerName 
      * @param {string} playerSymbol 
+     * @param {string} message 
      */
-    displayMiddleParty (playerName, playerSymbol) {
+    displayMiddleParty (playerName, playerSymbol, message) {
         let msg = this.title.nextElementSibling
         let player = msg.firstElementChild
         if (msg.id === "welcome-msg") {
             msg.remove ()
             msg = document.createElement ("h2")
             msg.id = "play-turn-msg"
-            msg.innerText = "C'est le tour de "
             msg.classList.add ("mt-12")
-            player = document.createElement ("span")
-            player.setAttribute ("class", "bg-blue-600 rounded-md px-2 py-1")
-            msg.append (player)
             this.title.after (msg)
         } 
+        msg.innerText = message
+        player = document.createElement ("span")
+        player.setAttribute ("class", "bg-blue-600 rounded-md px-2 py-1")
+        msg.append (player)
         player.innerText = `${playerName} (${playerSymbol})`
     }
 
-    /**
-     * @param {string} message 
-     */
-    displayEndMenu (message) {
-        this.root.querySelector ("#welcome-msg").innerText = message
+
+    displayEndMenu () {
         this.buttons.removeAttribute ("hidden") 
         this.buttons.firstElementChild.innerText = "Restart Game"
         this.buttons.lastElementChild.removeAttribute ("hidden")
