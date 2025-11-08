@@ -49,8 +49,8 @@ export default class WebIO {
      * @param {string} playerSymbol 
      * @param {string} message 
      */
-    displayTurn (playerName, playerSymbol, message) {
-        this.menu.displayMiddleParty (playerName, playerSymbol, message)
+    displayTurn (playerName, message) {
+        this.menu.displayMiddleParty (playerName, message)
     }
 
     /**
@@ -72,6 +72,10 @@ export default class WebIO {
         this.board.disableBoard ()
     }
 
+    reableInteractions () {
+        this.board.reableBoard ()
+    }
+
     /**
      * @param {Array<number>} cells 
      */
@@ -79,8 +83,14 @@ export default class WebIO {
         this.board.highlightWinner (cells)
     }
 
-    resetUI() {
+    /**
+     * @param {string} state 
+     */
+    resetUI(state) {
         this.board.resetBoard ()
-        this.menu.reset ()
+        if (state === "restart")
+            this.menu.resetRestartGame ()
+        else 
+            this.menu.resetQuitGame ()
     }
 }

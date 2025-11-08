@@ -33,11 +33,14 @@ export default class WebController {
             onSubmit : (event) => this.#onSubmit (event)
         })
         this.gameInterface.init ()
+        this.gameInterface.disableInteractions ()
     }
 
     playGame () {
+        this.board.resetBoard ()
         this.gameParty = new Game (this.players, this.board)
-        this.gameInterface.displayTurn (this.players[0]._name, this.players[0]._symbol, "C'est le tour de ")
+        this.gameInterface.reableInteractions ()
+        this.gameInterface.displayTurn (this.players[0]._name, "C'est le tour de ")
     }
 
     endGame () {
@@ -55,13 +58,13 @@ export default class WebController {
         this.gameInterface.updateBoardCell (symbol, position)
         if (partyData.status === "win") {
             this.gameInterface.showWinner (partyData.combo)
-            console.log (partyData.winner._name)
-            this.gameInterface.displayTurn (partyData.winner._name, partyData.winner._symbol, "Le Grand gagnant est ")
+            this.gameInterface.displayTurn (partyData.winner._name, "Le Grand gagnant est ")
             this.endGame ()
         } else if (partyData.status === "draw") {
+            this.gameInterface.displayTurn ("égalité", "Game Over ! ")
             this.endGame ()
         } else {
-            this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, this.players[this.gameParty.currentPlayIndex]._symbol, "C'est le tour de ")
+            this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, "C'est le tour de ")
         }
     }
 
@@ -70,10 +73,13 @@ export default class WebController {
      */
     #onClickBtns (event) {
         const btnClicked = event.target
-        if (btnClicked === event.currentTarget.firstElementChild)
+        if (btnClicked === event.currentTarget.firstElementChild && btnClicked.innerText === "Start Game")
             this.gameInterface.displayMenu ("begin", "Bienvenue à X - O game! Player 1 identifiez-vous :")
-        else {
-            //la partie de quit Game 
+        else if (btnClicked === event.currentTarget.firstElementChild && btnClicked.innerText === "Restart Game") {
+            this.gameInterface.resetUI ("restart")
+            this.playGame ()
+        }else {
+            this.gameInterface.resetUI ("quit")
         }
     }
 
