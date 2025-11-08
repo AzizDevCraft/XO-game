@@ -56,20 +56,31 @@ export default class BoardView {
         [].forEach.call (this.cells, (cell) => {
             const clickHandler = (event) => handler (event)
             cell.addEventListener ("click", clickHandler)
-            this.#handlers.set (cell, clickHandler)
+            if (this.#handlers.has (cell) && !this.#handlers.get(cell).has("click"))
+                this.#handlers.get (cell).set ("click", clickHandler)
+            else if (!this.#handlers.has (cell))
+                this.#handlers.set (cell, new Map ([["click", clickHandler]]))
         })
     }
 
     disableBoard () {
         [].forEach.call (this.cells, (cell) => {
-            cell.removeEventListener ("click", this.#handlers.get (cell))
+            for (let [eventName, handler] of this.#handlers.get (cell).entries()){
+                cell.removeEventListener (eventName, handler)
+            }
         })
     }
 
-    reableBoard () {
+    reEnableBoard () {
         [].forEach.call (this.cells, (cell) => {
-            cell.addEventListener ("click", this.#handlers.get (cell))
+            for (let [eventName, handler] of this.#handlers.get (cell).entries()){
+                cell.addEventListener (eventName, handler)
+            }
         })
+    }
+
+    clearHandlers () {
+        this.#handlers.clear ()
     }
     
 }

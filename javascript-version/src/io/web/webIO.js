@@ -73,7 +73,7 @@ export default class WebIO {
     }
 
     reableInteractions () {
-        this.board.reableBoard ()
+        this.board.reEnableBoard ()
     }
 
     /**
@@ -90,7 +90,9 @@ export default class WebIO {
         this.board.resetBoard ()
         if (state === "restart")
             this.menu.resetRestartGame ()
-        else 
+        else {
             this.menu.resetQuitGame ()
+            this.board.clearHandlers ()
+        }
     }
 }
