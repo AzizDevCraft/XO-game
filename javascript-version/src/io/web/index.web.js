@@ -12,19 +12,6 @@ export default class WebController {
         this.gameInterface = new WebIO ()
     }
 
-    /**
-     * input control
-     * @param {(string, string) => {valid:boolean, errorMessage?:string}} validFn 
-     * @param {string} input 
-     * @param {string} existingValue 
-     * @returns {string}
-     */
-    #askUntilValidPerson (validFn, input, existingValue) {
-        if (!validFn (input, existingValue).valid) {
-            this.gameInterface.displayErrorInput ()
-        }
-    }
-
     startGame () {
         this.gameInterface.bindEvents ({
             onClickCell : (event) => this.#onClickCell (event),
@@ -80,6 +67,7 @@ export default class WebController {
             this.playGame ()
         }else {
             this.gameInterface.resetUI ("quit")
+            this.players = []
         }
     }
 

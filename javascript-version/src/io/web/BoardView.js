@@ -50,16 +50,40 @@ export default class BoardView {
     }
 
     /**
+     * @param {HTMLElement} cell 
+     * @param {string} event 
+     * @param {Function} handler
+     */
+    saveHandlers (cell, event, handler) {
+        if (this.#handlers.has (cell) && !this.#handlers.get(cell).has(event))
+            this.#handlers.get (cell).set (event, handler)
+        else if (!this.#handlers.has (cell))
+            this.#handlers.set (cell, new Map ([[event, handler]]))
+    }
+
+    /**
      * @param {Function} handler 
      */
     onClickCell (handler) {
         [].forEach.call (this.cells, (cell) => {
             const clickHandler = (event) => handler (event)
             cell.addEventListener ("click", clickHandler)
-            if (this.#handlers.has (cell) && !this.#handlers.get(cell).has("click"))
-                this.#handlers.get (cell).set ("click", clickHandler)
-            else if (!this.#handlers.has (cell))
-                this.#handlers.set (cell, new Map ([["click", clickHandler]]))
+            this.saveHandlers (cell, "click", clickHandler)
+        })
+    }
+
+    /**
+     * @param {Function} mouseEnterHandler 
+     * @param {Function} mouseLeaveHandler 
+     */
+    onHoverCell (mouseEnterHandler, mouseLeaveHandler) {
+        [].forEach.call (this.cells, (cell) => {
+            const enterHandler = (event) => mouseEnterHandler (event)
+            const leaveHandler = (event) => mouseLeaveHandler (event)
+            cell.addEventListener ("mouseenter", enterHandler)
+            cell.addEventListener ("mouseleave", leaveHandler)
+            this.saveHandlers (cell, "mouseenter", enterHandler)
+            this.saveHandlers (cell, "mouseleave", leaveHandler)
         })
     }
 
@@ -72,15 +96,10 @@ export default class BoardView {
     }
 
     reEnableBoard () {
-        [].forEach.call (this.cells, (cell) => {
+        Array.prototype.forEach.call (this.cells, (cell) => {
             for (let [eventName, handler] of this.#handlers.get (cell).entries()){
                 cell.addEventListener (eventName, handler)
             }
         })
     }
-
-    clearHandlers () {
-        this.#handlers.clear ()
-    }
-    
 }
