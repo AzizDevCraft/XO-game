@@ -64,8 +64,12 @@ export default class BoardView {
         [].forEach.call (this.cells, (cell) => {
             cell.removeEventListener ("click", this.#handlers.get (cell))
         })
+    }
 
-        this.#handlers.clear ()
+    reableBoard () {
+        [].forEach.call (this.cells, (cell) => {
+            cell.addEventListener ("click", this.#handlers.get (cell))
+        })
     }
     
 }

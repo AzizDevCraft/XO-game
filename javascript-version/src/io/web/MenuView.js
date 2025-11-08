@@ -35,7 +35,7 @@ export default class MenuView {
      * @param {string} playerSymbol 
      * @param {string} message 
      */
-    displayMiddleParty (playerName, playerSymbol, message) {
+    displayMiddleParty (playerName, message) {
         let msg = this.title.nextElementSibling
         let player = msg.firstElementChild
         if (msg.id === "welcome-msg") {
@@ -49,7 +49,7 @@ export default class MenuView {
         player = document.createElement ("span")
         player.setAttribute ("class", "bg-blue-600 rounded-md px-2 py-1")
         msg.append (player)
-        player.innerText = `${playerName} (${playerSymbol})`
+        player.innerText = `${playerName}`
     }
 
 
@@ -91,11 +91,17 @@ export default class MenuView {
         }
     }
 
-    reset () {
-        this.root.querySelector ("#welcome-msg")?.remove ()
+    resetQuitGame () {
+        this.root.querySelector ("#play-turn-msg")?.remove ()
         this.form.setAttribute ("hidden", "")
         this.buttons.lastElementChild.setAttribute ("hidden", "")
         this.buttons.firstElementChild.innerText = "Start Game"
+    }
+
+    resetRestartGame () {
+        this.root.querySelector ("#welcome-msg")?.remove ()
+        this.form.setAttribute ("hidden", "")
+        this.buttons.setAttribute ("hidden", "")
     }
 
     /**
