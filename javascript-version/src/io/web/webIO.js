@@ -92,7 +92,10 @@ export default class WebIO {
             this.menu.resetRestartGame ()
         else {
             this.menu.resetQuitGame ()
-            this.board.clearHandlers ()
         }
+    }
+
+    get gestionnaire () {
+        return this.board.handlers
     }
 }
