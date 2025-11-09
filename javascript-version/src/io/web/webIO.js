@@ -12,10 +12,11 @@ export default class WebIO {
     init () {
         this.menu.renderTopBar ()
         this.board.renderBoard ()
-        this.board.onClickCell (this.eventHandlers?.onClickCell)
-        this.menu.onInput (this.eventHandlers?.onInput)
-        this.menu.onSubmit (this.eventHandlers?.onSubmit)
-        this.menu.onClickMenuBtns (this.eventHandlers?.onClickBtns)
+        this.board.onClickCell (this.eventHandlers.onClickCell)
+        this.menu.onInput (this.eventHandlers.onInput)
+        this.menu.onSubmit (this.eventHandlers.onSubmit)
+        this.menu.onClickMenuBtns (this.eventHandlers.onClickBtns)
+        this.board.onHoverCell (this.eventHandlers.onMouseEnter, this.eventHandlers.onMouseLeave)
     }
 
     /**
@@ -95,7 +96,21 @@ export default class WebIO {
         }
     }
 
-    get gestionnaire () {
-        return this.board.handlers
+    /**
+     * @param {HTMLElement} cell 
+     * @param {String} old 
+     * @param {String} jdid 
+     */
+    changeBG (cell, old, jdid) {
+        this.board.changeBG (cell, old, jdid)
+    }
+
+    /**
+     * @param {HTMLElement} cell
+     * @param {String} symbol 
+     * @param {Boolean} status 
+     */
+    changeHover (cell, symbol, status) {
+        this.board.changeHover (cell, symbol, status)
     }
 }
