@@ -17,7 +17,9 @@ export default class WebController {
             onClickCell : (event) => this.#onClickCell (event),
             onClickBtns : (event) => this.#onClickBtns (event), 
             onInput : (event) => this.#onInput (event),
-            onSubmit : (event) => this.#onSubmit (event)
+            onSubmit : (event) => this.#onSubmit (event), 
+            onMouseEnter : (event) => this.#onMouseEnter (event),
+            onMouseLeave : (event) => this.#onMouseLeave (event)
         })
         this.gameInterface.init ()
         this.gameInterface.disableInteractions ()
@@ -40,6 +42,7 @@ export default class WebController {
      */
     #onClickCell (event) {
         const symbol = this.players[this.gameParty.currentPlayIndex]._symbol 
+        this.gameInterface.changeHover (event.currentTarget, symbol, false)
         const position = Number (event.currentTarget.dataset.position) + 1 
         const partyData = this.gameParty.playTurn(position)
         this.gameInterface.updateBoardCell (symbol, position)
@@ -52,6 +55,34 @@ export default class WebController {
             this.endGame ()
         } else {
             this.gameInterface.displayTurn (this.players[this.gameParty.currentPlayIndex]._name, "C'est le tour de ")
+        }
+    }
+
+    /**
+     * @param {MouseEvent} event 
+     */
+    #onMouseEnter (event) {
+        const cell = event.target
+        const symbol = this.players[this.gameParty.currentPlayIndex]._symbol 
+        const status = cell.dataset.play 
+        if (!status) {
+            this.gameInterface.changeHover (cell, symbol, true)
+        }else {
+            if (event.relatedTarget.tagName !== "I")
+            this.gameInterface.changeBG (cell, "bg-slate-950", "bg-red-500/80")
+        }
+    }
+
+    /**
+     * @param {MouseEvent} event 
+     */
+    #onMouseLeave (event) {
+        const cell = event.target
+        const symbol = this.players[this.gameParty.currentPlayIndex]._symbol 
+        this.gameInterface.changeBG (cell, "bg-red-500/80", "bg-slate-950")
+        const status = cell.dataset.play 
+        if (!status) {
+            this.gameInterface.changeHover (cell, symbol, false)
         }
     }
 

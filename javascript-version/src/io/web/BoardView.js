@@ -73,6 +73,33 @@ export default class BoardView {
     }
 
     /**
+     * @param {HTMLElement} cell 
+     * @param {String} old 
+     * @param {String} jdid 
+     */
+    changeBG (cell, old, jdid) {
+        if (cell.classList.contains (old)) {
+            cell.classList.remove (old)
+            cell.classList.add (jdid)
+        }
+    }
+
+    /**
+     * @param {HTMLElement} cell
+     * @param {String} symbol 
+     * @param {Boolean} status 
+     */
+    changeHover (cell, symbol, status) {
+        if (status) {
+            const icon = document.createElement("i")
+            icon.setAttribute ("class", `text-7xl opacity-50 fa-solid fa-${symbol.toLowerCase ()}`)
+            cell.append (icon)
+        }else {
+            cell.firstElementChild.remove ()
+        }
+    }
+
+    /**
      * @param {Function} mouseEnterHandler 
      * @param {Function} mouseLeaveHandler 
      */
@@ -96,7 +123,7 @@ export default class BoardView {
     }
 
     reEnableBoard () {
-        Array.prototype.forEach.call (this.cells, (cell) => {
+        [].forEach.call (this.cells, (cell) => {
             for (let [eventName, handler] of this.#handlers.get (cell).entries()){
                 cell.addEventListener (eventName, handler)
             }
