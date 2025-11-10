@@ -58,7 +58,7 @@ class Person {
     /**
      * input control
      * @param {string} message 
-     * @param {(string, sting) => {valid:boolean, errorMessage?:string}}} validFunc 
+     * @param {(string, sting) => {valid:boolean, errorMessage?:string}} validFunc 
      * @param {string} existingValue 
      * @returns {string}
      */
@@ -319,10 +319,10 @@ class Game {
 // openning.displayMainMenu ()
 // openning.displayEndMenu ()
 
-// const schema = new Board ()
+const schema = new Board ()
 // schema.updateBoard ("2", "X")
 // schema.updateBoard ("2", "O")
-// schema.displayBoard ()
+schema.displayBoard ()
 
-const tictac = new Game ()
-tictac.startGame ()
+// const tictac = new Game ()
+// tictac.startGame ()
