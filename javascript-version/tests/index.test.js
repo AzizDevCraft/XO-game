@@ -1,4 +1,4 @@
-import GameController from "../src/index.js"
+import GameController from "../src/io/console/index.console.js"
 import FakeIO from "./FakeIO"
 import Person from "../src/core/Person.js"
 
