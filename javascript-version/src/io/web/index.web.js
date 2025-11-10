@@ -42,8 +42,10 @@ export default class WebController {
      */
     #onClickCell (event) {
         const symbol = this.players[this.gameParty.currentPlayIndex]._symbol 
-        this.gameInterface.changeHover (event.currentTarget, symbol, false)
-        const position = Number (event.currentTarget.dataset.position) + 1 
+        const cell = event.currentTarget
+        if (!cell.dataset.play)
+            this.gameInterface.changeHover (cell, symbol, false)
+        const position = Number (cell.dataset.position) + 1 
         const partyData = this.gameParty.playTurn(position)
         this.gameInterface.updateBoardCell (symbol, position)
         if (partyData.status === "win") {
